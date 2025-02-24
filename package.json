@@ -1,0 +1,24 @@
+{
+  "name": "squidgameplayertracker",
+  "version": "0.1.0",
+  "description": "",
+  "homepage": "https://github.com/waitwhatActo/SquidGamePlayerTracker#readme",
+  "bugs": {
+    "url": "https://github.com/waitwhatActo/SquidGamePlayerTracker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waitwhatActo/SquidGamePlayerTracker.git"
+  },
+  "license": "ISC",
+  "author": "Acto",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "mongoose": "^8.10.1"
+  }
+}
