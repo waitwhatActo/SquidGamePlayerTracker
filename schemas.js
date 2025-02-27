@@ -27,6 +27,7 @@ const playerSchema = new Schema({
 			default: false,
 		},
 		redLightGreenLight: {
+			timeAlive: Number,
 			passes: {
 				type: Number,
 				required: true,
@@ -74,6 +75,61 @@ const playerSchema = new Schema({
 	},
 });
 
+const gameSchema = new Schema({
+	game: String,
+	redLightGreenLight: {
+		active: {
+			type: Boolean,
+			default: false,
+			required: true,
+		},
+		startTime: Number,
+		endTime: Number,
+		startPlayerCount: Number,
+		eliminated: Number,
+		passed: Number,
+	},
+	dalgona: {
+		active: {
+			type: Boolean,
+			default: false,
+			required: true,
+		},
+		startTime: Number,
+		endTime: Number,
+		startPlayerCount: Number,
+		eliminated: Number,
+		passed: Number,
+	},
+	tugOfWar: {
+		active: {
+			type: Boolean,
+			default: false,
+			required: true,
+		},
+		startTime: Number,
+		endTime: Number,
+		startPlayerCount: Number,
+		eliminated: Number,
+		passed: Number,
+		team1: Array,
+		team2: Array,
+	},
+	mingle: {
+		active: {
+			type: Boolean,
+			default: false,
+			required: true,
+		},
+		startTime: Number,
+		endTime: Number,
+		startPlayerCount: Number,
+		eliminated: Number,
+		passed: Number,
+	},
+});
+
 
 const Player = mongoose.model("Player", playerSchema);
-module.exports = { Player };
+const Game = mongoose.model("Game", gameSchema);
+module.exports = { Player, Game };

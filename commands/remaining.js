@@ -2,10 +2,10 @@ const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js"
 const { Player } = require("../schemas.js");
 
 module.exports = {
-	name: "remainingPlayers",
+	name: "remaining",
 	type: "slash",
 	data: new SlashCommandBuilder()
-		.setName("remainingplayers")
+		.setName("remaining")
 		.setDescription("Shows the remaining players in the game."),
 	async execute(interaction) {
 		const remainingPlayers = await Player.find({

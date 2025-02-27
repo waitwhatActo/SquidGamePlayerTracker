@@ -1,5 +1,5 @@
 const { Events, EmbedBuilder } = require("discord.js");
-const { Player } = require("../schemas.js");
+const { Player, Game } = require("../schemas.js");
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -36,18 +36,18 @@ module.exports = {
 			    break;
 		}
 		    case "1343762181002493983":
-		    	if (args[0].length <= 3 && args[0].length > 0 && !Number.isNaN(args[0])) {
-		    		eliminatePlayer(args[0], "Red Light Green Light", Date.now(), message.author.id);
+		    	if (args[0].length <= 3 && args[0].length > 0 && !isNaN(args[0])) {
+		    		eliminatePlayer(args[0], Date.now(), message.author.id, message);
 		    	}
 		    	break;
 		    case "1343762570464460861":
-		    	if (args[0].length <= 3 && args[0].length > 0 && !Number.isNaN(args[0])) {
-		    		eliminatePlayer(args[0], "Dalgona", Date.now(), message.author.id);
+		    	if (args[0].length <= 3 && args[0].length > 0 && !isNaN(args[0])) {
+		    		eliminatePlayer(args[0], Date.now(), message.author.id, message);
 		    	}
 		    	break;
 		    case "1343762778883620895":
-		    	if (args[0].length <= 3 && args[0].length > 0 && !Number.isNaN(args[0])) {
-		    		eliminatePlayer(args[0], "Mingle", Date.now(), message.author.id);
+		    	if (args[0].length <= 3 && args[0].length > 0 && !isNaN(args[0])) {
+		    		eliminatePlayer(args[0], Date.now(), message.author.id, message);
 		    	}
 		    	break;
 		    case "":
@@ -104,18 +104,19 @@ async function registerPlayer(name, studentNumber, grade, medical, message) {
 	message.reply({ embeds: [embed] });
 }
 
-async function eliminatePlayer(number, game, time, guard) {
+async function eliminatePlayer(number, time, guard, message) {
+	const player = await Player.findOne({ playerNumber: number });
+	if (!player) return message.reply("There is no player with that player number. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
+	else if (!player.status.attendance) return message.reply("This player has not been marked present. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
+	else if (player.status.eliminated) return message.reply("❗**This player has already been eliminated from this game.**❗\nPlease pull them from the game immediately.");
+	player.status.eliminated = true;
+	player.status.eliminatedBy = guard;
+	player.status.eliminatedAt = Date.now();
+	player.status[game].eliminated = true;
+	switch (game) {
+	case "redLightGreenLight":
+		player.status[game].timeAlive = Date.now() - player.status[game].timeAlive;
+		break;
 
-}
-
-async function eliminatedPlayers() {
-
-}
-
-async function remainingPlayers() {
-
-}
-
-async function allPlayers() {
-
+	}
 }
