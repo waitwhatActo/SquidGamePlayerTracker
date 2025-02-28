@@ -76,7 +76,14 @@ const playerSchema = new Schema({
 });
 
 const gameSchema = new Schema({
+	active: {
+		type: Boolean,
+		required: true,
+		default: false,
+	},
 	game: String,
+	startTime: Number,
+	startPlayerCount: Number,
 	redLightGreenLight: {
 		active: {
 			type: Boolean,

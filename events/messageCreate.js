@@ -10,10 +10,10 @@ module.exports = {
 
 		switch (message.channelId) {
 		    case "1344137617725329408": { // #import
-			    if (args.length < 4 || isNaN(args[2]) || isNaN(args[3])) return message.reply("There was an error while     registering the player. Please try again. \nAre you sure that the message is in the proper format? `{First  Name} {Last Name} {Student Number} {Grade} [Medical Condition]`\nIf this keeps happening, please notify  Acton immediately.");
-			        await registerPlayer(`${args[0]} ${args[1]}`, args[2], args[3], args.slice(4).join(" "), message);
+			    if (args.length < 4 || isNaN(args[2]) || isNaN(args[3])) return message.reply("There was an error while registering the player. Please try again. \nAre you sure that the message is in the proper format? `{First Name} {Last Name} {Student Number} {Grade} [Medical Condition]`\nIf this keeps happening, please notify Acton immediately.");
+			    await registerPlayer(`${args[0]} ${args[1]}`, args[2], args[3], args.slice(4).join(" "), message);
 			    break;
-		}
+		    }
 		    case "1344137627690860646": {// #registration
 			    if (args.length < 1) return message.reply("Please provide a student number.");
 			    if (args[0].length < 6 || args[0].length > 8 || isNaN(args[0])) return message.reply("Please provide a valid student number.");
@@ -34,25 +34,14 @@ module.exports = {
 			    	);
 			    message.reply({ embeds: [embed] });
 			    break;
-		}
-		    case "1343762181002493983":
-		    	if (args[0].length <= 3 && args[0].length > 0 && !isNaN(args[0])) {
-		    		eliminatePlayer(args[0], Date.now(), message.author.id, message);
-		    	}
-		    	break;
-		    case "1343762570464460861":
-		    	if (args[0].length <= 3 && args[0].length > 0 && !isNaN(args[0])) {
-		    		eliminatePlayer(args[0], Date.now(), message.author.id, message);
-		    	}
-		    	break;
-		    case "1343762778883620895":
-		    	if (args[0].length <= 3 && args[0].length > 0 && !isNaN(args[0])) {
-		    		eliminatePlayer(args[0], Date.now(), message.author.id, message);
-		    	}
-		    	break;
-		    case "":
-		    	break;
-		}
+		    }
+		    case "1343762181002493983": { // #elimination
+			    if (args.length < 1) return message.reply("Please provide a player number, and ONLY a player number.");
+			    if (isNaN(args[0])) return message.reply("Please provide a valid player number.");
+			    await eliminatePlayer(args[0], message.author.id, message);
+			    break;
+		    }
+	    }
 	},
 };
 
@@ -104,7 +93,9 @@ async function registerPlayer(name, studentNumber, grade, medical, message) {
 	message.reply({ embeds: [embed] });
 }
 
-async function eliminatePlayer(number, time, guard, message) {
+async function eliminatePlayer(number, guard, message) {
+	const game = await Game.findOne({ active: true });
+	if (!game) return message.reply("There is no active game. Please wait until the game begins.");
 	const player = await Player.findOne({ playerNumber: number });
 	if (!player) return message.reply("There is no player with that player number. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
 	else if (!player.status.attendance) return message.reply("This player has not been marked present. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
@@ -112,11 +103,29 @@ async function eliminatePlayer(number, time, guard, message) {
 	player.status.eliminated = true;
 	player.status.eliminatedBy = guard;
 	player.status.eliminatedAt = Date.now();
-	player.status[game].eliminated = true;
-	switch (game) {
-	case "redLightGreenLight":
-		player.status[game].timeAlive = Date.now() - player.status[game].timeAlive;
-		break;
-
+	switch (game.game) {
+	    case "redLightGreenLight":
+	    	player.status.redLightGreenLight.timeAlive = Date.now() - game.redLightGreenLight.startTime;
+		    player.status.redLightGreenLight.eliminated = true;
+	    	break;
+	    case "dalgona":
+	    	player.status.dalgona.timeSpent = Date.now() - game.dalgona.startTime;
+	    	player.status.dalgona.broke = true;
+	    	break;
+	    case "tugOfWar":
+	    	player.status.tugOfWar.lost = true;
+	    	break;
+	    case "mingle":
+	    	player.status.mingle.timeAlive = Date.now() - game.mingle.startTime;
+	    	player.status.mingle.eliminated = true;
+	    	break;
 	}
+	await player.save()
+		.then(() => {
+			message.react("✅");
+		})
+		.catch((err) => {
+			message.react("❌");
+			message.reply(`**Record not updated**\nThere was an error while eliminating the player. **Please try again.** \nIf this keeps happening, please notify Acton immediately.\`\`\`${err}\`\`\``);
+		});
 }
