@@ -1,5 +1,5 @@
 const { Events, EmbedBuilder } = require("discord.js");
-const { Player, Game } = require("../schemas.js");
+const { Player } = require("../schemas.js");
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -11,7 +11,15 @@ module.exports = {
 		switch (message.channelId) {
 		    case "1344137617725329408": { // #import
 			    if (args.length < 4 || isNaN(args[2]) || isNaN(args[3])) return message.reply("There was an error while registering the player. Please try again. \nAre you sure that the message is in the proper format? `{First Name} {Last Name} {Student Number} {Grade} [Medical Condition]`\nIf this keeps happening, please notify Acton immediately.");
-			    await registerPlayer(`${args[0]} ${args[1]}`, args[2], args[3], args.slice(4).join(" "), message);
+			    if (args[2].isNaN() && (args[3].length > 5 && args[3].length < 8) && (args[3] >= 50000 && args[3] <= 3000000)) {
+				    await registerPlayer(`${args[0]} ${args[1]} ${args[2]}`, args[3], args[4], args.slice(5).join(" "), message);
+			    }
+			    else if ((args[2].length > 5 && args[2].length < 8) && (args[2] >= 50000 && args[2] <= 3000000)) {
+				    await registerPlayer(`${args[0]} ${args[1]}`, args[2], args[3], args.slice(4).join(" "), message);
+			    }
+			    else {
+				    return message.reply("There was an error while registering the player. Please try again. \nAre you sure that the message is in the proper format? `{First Name} {Last Name} {Student Number} {Grade} [Medical Condition]`\nIf this keeps happening, please notify Acton immediately.");
+			    }
 			    break;
 		    }
 		    case "1344137627690860646": {// #registration
@@ -23,7 +31,7 @@ module.exports = {
 			    await player.save();
 			    const embed = new EmbedBuilder()
 			    	.setTitle("Player marked Present!")
-			    	.setDescription(`Please welcome ${player.name} to Hounds Game! Make sure to collect their fee.`)
+			    	.setDescription(`Please welcome ${player.name} to Hounds Game! Make sure to collect their entry fee.`)
 			    	.setColor(0x00FF00)
 			    	.addFields(
 			    		{ name: "Name", value: player.name, inline: true },
@@ -94,8 +102,6 @@ async function registerPlayer(name, studentNumber, grade, medical, message) {
 }
 
 async function eliminatePlayer(number, guard, message) {
-	const game = await Game.findOne({ active: true });
-	if (!game) return message.reply("There is no active game. Please wait until the game begins.");
 	const player = await Player.findOne({ playerNumber: number });
 	if (!player) return message.reply("There is no player with that player number. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
 	else if (!player.status.attendance) return message.reply("This player has not been marked present. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
@@ -103,7 +109,7 @@ async function eliminatePlayer(number, guard, message) {
 	player.status.eliminated = true;
 	player.status.eliminatedBy = guard;
 	player.status.eliminatedAt = Date.now();
-	switch (game.game) {
+	/* switch (game.game) {
 	    case "redLightGreenLight":
 	    	player.status.redLightGreenLight.timeAlive = Date.now() - game.redLightGreenLight.startTime;
 		    player.status.redLightGreenLight.eliminated = true;
@@ -119,7 +125,7 @@ async function eliminatePlayer(number, guard, message) {
 	    	player.status.mingle.timeAlive = Date.now() - game.mingle.startTime;
 	    	player.status.mingle.eliminated = true;
 	    	break;
-	}
+	}*/
 	await player.save()
 		.then(() => {
 			message.react("✅");
