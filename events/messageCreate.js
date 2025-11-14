@@ -11,7 +11,7 @@ module.exports = {
 		switch (message.channelId) {
 		    case "1344137617725329408": { // #import
 			    if (args.length < 4 || isNaN(args[2]) || isNaN(args[3])) return message.reply("There was an error while registering the player. Please try again. \nAre you sure that the message is in the proper format? `{First Name} {Last Name} {Student Number} {Grade} [Medical Condition]`\nIf this keeps happening, please notify Acton immediately.");
-			    if (args[2].isNaN() && (args[3].length > 5 && args[3].length < 8) && (args[3] >= 50000 && args[3] <= 3000000)) {
+			    if (isNaN(args[2]) && (args[3].length > 5 && args[3].length < 8) && (args[3] >= 50000 && args[3] <= 3000000)) {
 				    await registerPlayer(`${args[0]} ${args[1]} ${args[2]}`, args[3], args[4], args.slice(5).join(" "), message);
 			    }
 			    else if ((args[2].length > 5 && args[2].length < 8) && (args[2] >= 50000 && args[2] <= 3000000)) {
@@ -22,7 +22,7 @@ module.exports = {
 			    }
 			    break;
 		    }
-		    case "1344137627690860646": {// #registration
+		    case "1344137627690860646": { // #registration
 			    if (args.length < 1) return message.reply("Please provide a student number.");
 			    if (args[0].length < 6 || args[0].length > 8 || isNaN(args[0])) return message.reply("Please provide a valid student number.");
 			    const player = await Player.findOne({ studentNumber: args[0] });
@@ -132,6 +132,6 @@ async function eliminatePlayer(number, guard, message) {
 		})
 		.catch((err) => {
 			message.react("❌");
-			message.reply(`**Record not updated**\nThere was an error while eliminating the player. **Please try again.** \nIf this keeps happening, please notify Acton immediately.\`\`\`${err}\`\`\``);
+			message.reply({ content: `**Record not updated**\nThere was an error while eliminating the player. **Please try again.** \nIf this keeps happening, please notify Acton immediately.\`\`\`${err}\`\`\`` });
 		});
 }

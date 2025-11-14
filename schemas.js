@@ -2,23 +2,26 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const playerSchema = new Schema({
-	name: String,
-	playerNumber: {
-		type: Number,
-		required: true,
-	},
-	studentNumber: {
-		type: Number,
-		required: true,
-	},
-	grade: String,
-	medical: {
-		needed: {
-			type: Boolean,
+	info: {
+		firstName: String,
+		lastName: String,
+		playerNumber: {
+			type: Number,
 			required: true,
-			default: false,
 		},
-		description: String,
+		studentNumber: {
+			type: Number,
+			required: true,
+		},
+		grade: String,
+		medical: {
+			needed: {
+				type: Boolean,
+				required: true,
+				default: false,
+			},
+			description: String,
+		},
 	},
 	status: {
 		attendance: {
@@ -26,8 +29,18 @@ const playerSchema = new Schema({
 			required: true,
 			default: false,
 		},
+		eliminated: {
+			type: Boolean,
+			required: true,
+			default: false,
+		},
+		eliminatedBy: String,
+		eliminatedAt: Number,
+		eliminatedIn: String,
+	},
+	games: {
 		redLightGreenLight: {
-			timeAlive: Number,
+			timeSpent: Number,
 			passes: {
 				type: Number,
 				required: true,
@@ -42,7 +55,7 @@ const playerSchema = new Schema({
 		dalgona: {
 			shape: String,
 			timeSpent: Number,
-			broke: {
+			eliminated: {
 				type: Boolean,
 				required: true,
 				default: false,
@@ -50,7 +63,7 @@ const playerSchema = new Schema({
 		},
 		tugOfWar: {
 			team: Number,
-			lost: {
+			eliminated: {
 				type: Boolean,
 				required: true,
 				default: false,
@@ -64,14 +77,6 @@ const playerSchema = new Schema({
 				default: false,
 			},
 		},
-		eliminated: {
-			type: Boolean,
-			required: true,
-			default: false,
-		},
-		eliminatedBy: String,
-		eliminatedAt: Number,
-		eliminatedIn: String,
 	},
 });
 

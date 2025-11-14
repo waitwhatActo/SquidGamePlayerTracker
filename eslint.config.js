@@ -25,7 +25,7 @@ module.exports = defineConfig([
 			"no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
 			"no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
 			"no-trailing-spaces": ["error"],
-			"no-use-before-define": "error",
+			"no-use-before-define": ["error", { "functions": false }],
 			"no-var": "error",
 			"object-curly-spacing": ["error", "always"],
 			"prefer-const": "error",
