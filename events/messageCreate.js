@@ -9,7 +9,12 @@ module.exports = {
 		const args = message.content.split(" ");
 
 		switch (message.channelId) {
-		    case "1344137617725329408": { // #import
+		    case "1344137617725329408": { // import
+			    if (typeof args[2] == "string") {
+			    	args[1] = args[1] + " " + args[2];
+			    	args = args.slice(0, 2).concat(args.slice(3));
+			}
+
 			    if (args.length < 4 || isNaN(args[2]) || isNaN(args[3])) return message.reply("There was an error while registering the player. Please try again. \nAre you sure that the message is in the proper format? `{First Name} {Last Name} {Student Number} {Grade} [Medical Condition]`\nIf this keeps happening, please notify Acton immediately.");
 			    if (isNaN(args[2]) && (args[3].length > 5 && args[3].length < 8) && (args[3] >= 50000 && args[3] <= 3000000)) {
 				    await registerPlayer(`${args[0]} ${args[1]} ${args[2]}`, args[3], args[4], args.slice(5).join(" "), message);
@@ -22,7 +27,9 @@ module.exports = {
 			    }
 			    break;
 		    }
-		    case "1344137627690860646": { // #registration
+		case "1344137627690860646": // registration 1
+		case "1363667117735674146": // registration 2
+		case "1363667154762862592": { // registration 3
 			    if (args.length < 1) return message.reply("Please provide a student number.");
 			    if (args[0].length < 6 || args[0].length > 8 || isNaN(args[0])) return message.reply("Please provide a valid student number.");
 			    const player = await Player.findOne({ studentNumber: args[0] });
@@ -43,7 +50,13 @@ module.exports = {
 			    message.reply({ embeds: [embed] });
 			    break;
 		    }
-		    case "1343762181002493983": { // #elimination
+
+		case "1343762181002493983": // elimination 1
+		case "1363666928375300176": // elimination 2
+		case "1363666944976355528": // elimination 3
+		case "1438967949972213800": // elimination 4
+		case "1438967983853539418": // elimination 5
+		case "1438968010072133815": { // elimination 6
 			    if (args.length < 1) return message.reply("Please provide a player number, and ONLY a player number.");
 			    if (isNaN(args[0])) return message.reply("Please provide a valid player number.");
 			    await eliminatePlayer(args[0], message.author.id, message);
