@@ -10,24 +10,24 @@ module.exports = {
             "status.eliminated": true,
         }).exec();
         if (eliminatedPlayers.length === 0) return await interaction.reply({ content: "There are no eliminated players in the game.", flags: MessageFlags.Ephemeral });
-        let embedString = ["", "", "", "", "", "", "", "", "", ""];
+        let embedPages = ["", "", "", "", "", "", "", "", "", ""];
         for (let i = 0; i < eliminatedPlayers.length; i++) {
             const player = eliminatedPlayers[i];
             const playerInfo = `${player.info.lastName}, ${player.info.firstName} (**#${player.info.playerNumber}**) - Eliminated by: ${player.status.eliminatedBy.firstName} ${player.status.eliminatedBy.lastName} <@${player.status.eliminatedBy.discordId}>\n`;
-            for (let j = 0; j < embedString.length; j++) {
-                if (embedString[j].length + playerInfo.length < 4000) {
-                    embedString[j] += playerInfo;
+            for (let j = 0; j < embedPages.length; j++) {
+                if (embedPages[j].length + playerInfo.length < 4000) {
+                    embedPages[j] += playerInfo;
                     break;
                 }
             }
 
         }
         const embedArray = [];
-        for (let i = 0; i < embedString.length; i++) {
-            if (embedString[i].length > 0) {
+        for (let i = 0; i < embedPages.length; i++) {
+            if (embedPages[i].length > 0) {
                 const embed = new EmbedBuilder()
                     .setTitle(`Eliminated Players (Part ${i + 1})`)
-                    .setDescription(embedString[i])
+                    .setDescription(embedPages[i])
                     .setColor(0xFF0000)
                     .setTimestamp();
                 embedArray.push(embed);
