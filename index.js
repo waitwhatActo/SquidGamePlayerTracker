@@ -19,7 +19,7 @@ for (const file of commandFiles) {
 		bot.commands.set(command.data.name, command);
 	}
 	else {
-		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+		console.log(`[WARNING] The command at ${file} is missing a required "data" or "execute" property.`);
 	}
 }
 

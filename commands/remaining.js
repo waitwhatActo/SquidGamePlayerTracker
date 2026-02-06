@@ -3,7 +3,7 @@ const { Player } = require("../schemas.js");
 
 module.exports = {
 	name: "remaining",
-	type: "slash",
+	description: "Shows the remaining players in the game.",
 	data: new SlashCommandBuilder()
 		.setName("remaining")
 		.setDescription("Shows the remaining players in the game."),
