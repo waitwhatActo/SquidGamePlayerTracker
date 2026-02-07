@@ -12,7 +12,7 @@ module.exports = {
         let embedString = ["", "", "", "", "", "", "", "", "", ""];
         for (let i = 0; i < presentPlayers.length; i++) {
             const player = presentPlayers[i];
-            const playerInfo = `${player.info.lastName}, ${player.info.firstName} (**#${player.info.playerNumber}**) - ${player.status.eliminated ? `🟢 ${player.status.location}` : `🔴 ${player.status.eliminatedIn}`}\n`;
+            const playerInfo = `${player.info.lastName}, ${player.info.firstName} (**#${player.info.playerNumber}**) - ${!player.status.eliminated ? `🟢 ${player.status.location}` : `🔴 ${player.status.eliminatedIn}`}\n`;
             for (let j = 0; j < embedString.length; j++) {
                 if (embedString[j].length + playerInfo.length < 4000) {
                     embedString[j] += playerInfo;

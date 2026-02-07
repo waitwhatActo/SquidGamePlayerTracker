@@ -16,7 +16,7 @@ module.exports = {
 		let embedString = "";
 		for (let i = 0; i < remainingPlayers.length; i++) {
 			const player = remainingPlayers[i];
-			embedString += `${player.name} **#${player.playerNumber}** ${player.medical.needed ? "⛑️" : ""}\n`;
+			embedString += `${player.info.lastName}, ${player.info.firstName} **#${player.info.playerNumber}** ${player.info.medical.needed ? "⛑️" : ""}\n`;
 		}
 		const embed = new EmbedBuilder()
 			.setTitle(`Remaining Players (${remainingPlayers.length})`)

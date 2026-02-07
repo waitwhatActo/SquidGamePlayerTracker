@@ -58,14 +58,14 @@ const playerSchema = new Schema({
     status: {
         attendance: { type: Boolean, required: true, default: false },
         eliminated: { type: Boolean, required: true, default: false },
-        eliminatedBy: guardSchema,
+        eliminatedBy: String,
         eliminatedAt: Number,
         eliminatedIn: String,
         location: String,
     },
     games: {
         redLightGreenLight: {
-            timeSpent: Number,
+            timeAlive: Number,
             passes: { type: Number, required: true, default: 0 },
             eliminated: { type: Boolean, required: true, default: false },
         },

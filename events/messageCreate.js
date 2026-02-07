@@ -118,12 +118,11 @@ async function checkInPlayer(studentNumber, message) {
 
 async function eliminatePlayer(number, guardDiscordId, message) {
 	const player = await Player.findOne({ "info.playerNumber": number });
-    const guard = await Guard.findOne({ "discordId": guardDiscordId });
 	if (!player) return message.reply("There is no player with that player number. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
 	else if (!player.status.attendance) return message.reply("This player has not been marked present. Please validate the player number and try again. If this keeps happening, please notify a supervisor.");
 	else if (player.status.eliminated) return message.reply("❗**This player has already been eliminated from this game.**❗\nPlease pull them from the game immediately.");
 	player.status.eliminated = true;
-	player.status.eliminatedBy = guard;
+	player.status.eliminatedBy = guardDiscordId;
 	player.status.eliminatedAt = Date.now();
     const game = await Game.findOne({ active: true });
 	switch (game.game) {
