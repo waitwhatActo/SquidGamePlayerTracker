@@ -20,6 +20,7 @@ module.exports = {
                 }
             }
         }
+      
         const embedArray = [];
         for (let i = 0; i < embedString.length; i++) {
             if (embedString[i].length > 0) {

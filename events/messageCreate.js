@@ -1,5 +1,5 @@
 const { Events, EmbedBuilder } = require("discord.js");
-const { Player } = require("../schemas.js");
+const { Player, Game, Guard } = require("../schemas.js");
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -28,7 +28,7 @@ module.exports = {
 		    	if (args.length !== 1 || !(args[0].length >= 6 && args[0].length <= 8) || isNaN(args[0])) return message.reply("Please provide a valid student number.");
 		    	    await checkInPlayer(args[0], message);
 		    	    break;
-		        }
+		    }
 
 		    case "1343762181002493983": // elimination 1
 		    case "1363666928375300176": // elimination 2
@@ -98,6 +98,7 @@ async function registerPlayer(firstName, lastName, studentNumber, grade, medical
 async function checkInPlayer(studentNumber, message) {
 	const player = await Player.findOne({ "info.studentNumber": studentNumber });
 	if (!player) return message.reply("⚠️ No player found with that student number.");
+    if (player.status.attendance) return message.reply("⚠️ This player has already been marked present.");
 	player.status.attendance = true;
 	player.status.location = "Small Gym";
 	await player.save();
@@ -124,23 +125,24 @@ async function eliminatePlayer(number, guardDiscordId, message) {
 	player.status.eliminated = true;
 	player.status.eliminatedBy = guard;
 	player.status.eliminatedAt = Date.now();
-	/* switch (game.game) {
+    const game = await Game.findOne({ active: true });
+	switch (game.game) {
 	    case "redLightGreenLight":
-	    	player.status.redLightGreenLight.timeAlive = Date.now() - game.redLightGreenLight.startTime;
-		    player.status.redLightGreenLight.eliminated = true;
+            player.games.redLightGreenLight.timeAlive = Date.now() - game.redLightGreenLight.startTime;
+		    player.games.redLightGreenLight.eliminated = true;
 	    	break;
 	    case "dalgona":
-	    	player.status.dalgona.timeSpent = Date.now() - game.dalgona.startTime;
-	    	player.status.dalgona.broke = true;
+	    	player.games.dalgona.timeSpent = Date.now() - game.dalgona.startTime;
+	    	player.games.dalgona.broke = true;
 	    	break;
 	    case "tugOfWar":
-	    	player.status.tugOfWar.lost = true;
+	    	player.games.tugOfWar.lost = true;
 	    	break;
 	    case "mingle":
-	    	player.status.mingle.timeAlive = Date.now() - game.mingle.startTime;
-	    	player.status.mingle.eliminated = true;
+	    	player.games.mingle.timeAlive = Date.now() - game.mingle.startTime;
+	    	player.games.mingle.eliminated = true;
 	    	break;
-	}*/
+	}
 	await player.save()
 		.then(() => {
 			message.react("✅");

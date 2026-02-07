@@ -20,8 +20,8 @@ module.exports = {
                     break;
                 }
             }
-
         }
+        
         const embedArray = [];
         for (let i = 0; i < embedPages.length; i++) {
             if (embedPages[i].length > 0) {

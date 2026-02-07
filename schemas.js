@@ -107,6 +107,24 @@ const guardSchema = new Schema({
     }
 });
 
+const GameSchema = new Schema({
+    active: { type: Boolean, required: true, default: false },
+    game: String,
+    redLightGreenLight: {
+        startTime: Number,
+    },
+    dalgona: {
+        startTime: Number,
+    },
+    tugOfWar: {
+        startTime: Number,
+    },
+    mingle: {
+        startTime: Number,
+    },
+});
+
 const Player = mongoose.model("Player", playerSchema);
 const Guard = mongoose.model("Guard", guardSchema);
-module.exports = { Player, Guard };
+const Game = mongoose.model("Game", GameSchema);
+module.exports = { Player, Guard, Game };
